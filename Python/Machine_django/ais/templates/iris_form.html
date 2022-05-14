@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Iris</title>
+    {% load static %}
+    <link href="{% static '/css/style.css' %}" rel="Stylesheet" type="text/css">
+
+    <script type="text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+        $('#btn_send').on('click', send);
+        $('#btn_reset').on('click', function() {
+          $("#panel").html("");
+        });
+        $('#btn_close').on('click', function() { 
+          window.close(); 
+        });
+      });
+
+      function send() {
+        var params = $('#frm').serialize(); // 직렬화, 폼의 데이터를 키와 값의 구조로 조합
+        alert('params: ' + params);  // 수신 데이터 확인
+        $.ajax({
+          url: '/iris_proc',
+          type: 'get',  // get or post
+          cache: false, // 응답 결과 임시 저장 취소
+          async: true,  // true: 비동기 통신
+          dataType: 'json', // 응답 형식: json, html, xml...
+          data: params,      // 데이터
+          success: function(rdata) { // 응답이 온경우
+            // alert(rdata);
+            var str = '';
+            str += "<ul>";
+            str += '<li>' + 'data: ' + rdata.data + '</li>';
+            str += '<li style="list-style: none;"><br>예측 결과</li>';
+
+            if (rdata.result == 0) {         // Iris-setosa
+                str += '<li style="list-style: none;"><IMG src="{% static '/images/Iris-setosa.jpg' %}" style="width: 40%;"></li>';
+            } else if (rdata.result == 1) { // Iris-versicolor
+                str += '<li style="list-style: none;"><IMG src="{% static '/images/Iris-versicolor.jpg' %}" style="width: 40%;"></li>';
+            } else if (rdata.result == 2) { // Iris-virginica
+                str += '<li style="list-style: none;"><IMG src="{% static '/images/Iris-virginica.jpg' %}" style="width: 40%;"></li>';
+            }
+            str += '</ul>';
+            $('#panel').html(str);  // 결과 이미지 출력
+
+          },
+          // Ajax 통신 에러, 응답 코드가 200이 아닌경우, dataType이 다른경우
+          error: function(request, status, error) { // callback 함수
+            console.log(error);
+          }
+        });
+
+        // $('#panel').html('처리중입니다....');  // 텍스트를 출력하는 경우
+        $('#panel').html("<img src='{% static '/images/ani04.gif' %}' style='width: 10%;'>");
+        $('#panel').show(); // 숨겨진 태그의 출력
+      }
+    </script>
+</head>
+<body>
+<DIV class="container">
+    <H1>IRIS</H1>
+
+    <DIV id='panel' style='display: none; margin: 10px auto; width: 90%;'></DIV>
+    <div id='chart' style='margin: 10px auto; width: 60%; display: none;'></div>
+
+    <form id='frm' name='frm' action='/wine_proc/' method='GET'>
+        <br>
+        <OL>
+          <LI class="li_question" style="list-style: none;">
+              데이터:
+              <input name="data" id="data" type="text" min = "0" max="1000" step="1" style="width: 80%;"
+                     value="5.1,3.5,1.4,0.2"><br>
+              Iris-setosa 데이터 예: 5.1,3.5,1.4,0.2<br>
+              Iris-versicolor 데이터 예: 5.0,2.0,3.5,1.0<br>
+              Iris-virginica 데이터 예: 6.5,3.2,5.1,2.0<br>
+          </LI>
+        </OL>
+
+        <br>
+        <DIV style="text-align:center;">
+            <button type='button' id='btn_send'>처리</button>
+            <button type='button' id='btn_reset'>결과 지우기</button>
+            <button type='button' id='btn_close'>닫기</button>
+        </DIV>
+    </form>
+</DIV>
+</body>
+</html>
+

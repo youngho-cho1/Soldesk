@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Actor</title>
+    {% load static %}
+    <link href="{% static '/css/style.css' %}" rel="Stylesheet" type="text/css">
+    <script type="text/JavaScript"
+                 src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+      $(function() { // 자동 실행
+        // $('#btn_send').on('click', send);
+        $('#btn_index').on('click', function() {location.href="/"}); // http://127.0.0.1:8000/
+      });
+    </script>
+</head>
+<body>
+<DIV class="container">
+    <H1>Actor Finder</H1>
+
+    <!--  이미지 업로드, action="actor_form2" 자동으로 설정됨, , http://192.168.0.8:8000/actor_form2/  -->
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}  <!-- <% Client 화면 제작용 Django script 명시, Spring JSTL 비슷 %> -->
+        {{input_file}}        <!-- <%=input_file %> -->
+
+        <button type="submit">전송(확인)</button>
+        <button type='button' id='btn_index'>HOME</button>
+    </form>
+    <br>
+
+    <DIV id='panel' style='margin: 10px auto; width: 90%; font-weight: bold;'>
+        <!-- 업로드된 파일명 -->
+        {% if uploaded_file_name != '' %}   <!-- <% if (uploaded_file_name.equals("") { %> -->
+            업로드된 파일명: {{uploaded_file_name}}<br>
+            결과: {{result}}<br>
+            <IMG src="/media/actor/{{uploaded_file_name}}">
+        {% endif  %}   <!-- <% } %> -->
+
+    </DIV>
+</DIV>
+</body>
+</html>
+
