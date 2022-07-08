@@ -1,0 +1,181 @@
+[01] 토크나이징(Tokenizing)
+   - 자연어는 수치 연산을 처리하는 컴퓨터는 이해 할 수 없음.
+   - 문장을 이해 할 수 없음으로 최소 의미를 갖는 단어의 형태인 형태소로 분할해야하며 이렇게 분할된 단어를 토큰이라고함.
+   - 토큰으로 분리하는 토크나이징은 언어의 문법을 알아야하며 이런 과정은 어렵기 때문에 각 언어를 지원하는 토크나이징 package를 이용함.
+   - 한국어 토크나이징을 위해서 KoNLPy가 존재함.
+
+1. 한국어 품사의 분류
+   
+
+
+
+[02] 자연어 처리 관련 패키지 설정
+
+1. Java를 설치(Colab 설치됨)
+   - KoNLpy는 자바를 사용함.
+   - JDK를 1.7 버전 이상으로 설치 필요.
+
+1) JAVA 설치
+
+2) 환경 변수 추가
+    - JAVA_HOME: C:\jdk1.8.0
+    - Path: C:\jdk1.8.0\bin 맨 앞 부분에 등록 
+
+
+2. nltk 설치(Colab 설치됨)
+   - 자연어 처리 지원
+1) nltk 설치
+   (base) C:\WINDOWS\system32>activate ai
+   (ai) C:\Windows\system32>pip install nltk
+   Collecting nltk
+   Downloading nltk-3.6.6-py3-none-any.whl (1.5 MB)
+
+   (ai) C:\Windows\system32>pip show nltk
+   Name: nltk
+   Version: 3.6.6
+   Summary: Natural Language Toolkit
+   Home-page: https://www.nltk.org/
+   Author: NLTK Team
+   Author-email: nltk.team@gmail.com
+   License: Apache License, Version 2.0
+   Location: c:\programdata\anaconda3\envs\ai\lib\site-packages
+   Requires: click, joblib, regex, tqdm
+   Required-by:
+
+2) nltk 데이터 설치(Jupyter에서 설치 필요)
+   import nltk
+   nltk.download('punkt')
+
+
+3. KoNLPy 파이썬 패키지 설치(Colab 설치 필요)
+   - 파이썬 기반 자연어 처리 패키지
+   - https://konlpy-ko.readthedocs.io/ko/v0.4.3/
+
+   (base) C:\WINDOWS\system32>activate ai
+   (ai) C:\WINDOWS\system32>pip install konlpy
+   Collecting konlpy
+     Using cached konlpy-0.5.2-py2.py3-none-any.whl (19.4 MB)
+   Requirement already satisfied: numpy>=1.6 in c:\programdata\anaconda3\envs\machine\lib\site-packages (from konlpy) (1.19.2)
+
+
+4. jpype1 파이썬 패키지 설치(Colab 설치됨)
+   - version 확인
+     C:\Users\soldesk>java -version
+     java version "1.8.0_301"
+     Java(TM) SE Runtime Environment (build 1.8.0_301-b09)
+     Java HotSpot(TM) 64-Bit Server VM (build 25.301-b09, mixed mode)
+
+     C:\Users\soldesk>python --version
+     Python 3.7.6
+
+   - https://www.lfd.uci.edu/~gohlke/pythonlibs/#jpype -> JPype1-1.1.2-cp37-cp37m-win_amd64.whl 파일 다운로드
+     pip install 파일명
+
+   - KoNLPy와 JAVA의 연동 지원, JDK8, JDK 11은 JPype 1.1.2 설치
+     (ai) C:/kd/setup> pip install JPype1-1.1.2-cp36-cp36m-win_amd64.whl   
+     또는 
+     (ai) C:/kd/setup> pip install JPype1-1.1.2-cp37-cp37m-win_amd64.whl   
+
+   - 설치 확인
+     (ai) C:\kd1\setup>pip show JPype1
+     Name: JPype1
+     Version: 1.1.2
+     Summary: A Python to Java bridge.
+     Home-page: https://github.com/jpype-project/jpype
+     Author: Steve Menard
+     Author-email: devilwolf@users.sourceforge.net
+     License: License :: OSI Approved :: Apache Software License
+     Location: c:\programdata\anaconda3\envs\ai\lib\site-packages
+     Requires: typing-extensions
+     Required-by: konlpy
+
+5. tweepy 4.0이후 모듈 통합으로 발생하는 "AttributeError: module 'tweepy' has no attribute 'StreamListener'" 에러의 해결
+   - https://www.tweepy.org/
+
+(ai) C:\kd1\setup>pip show tweepy
+Name: tweepy
+Version: 4.4.0
+Summary: Twitter library for Python
+Home-page: https://www.tweepy.org/
+Author: Joshua Roesslein
+Author-email: tweepy@googlegroups.com
+License: MIT
+Location: c:\programdata\anaconda3\envs\ai\lib\site-packages
+Requires: requests, requests-oauthlib
+Required-by: konlpy
+
+(ai) C:\kd1\setup>pip uninstall tweepy
+Found existing installation: tweepy 4.4.0
+Uninstalling tweepy-4.4.0:
+  Would remove:
+    c:\programdata\anaconda3\envs\ai\lib\site-packages\tweepy-4.4.0.dist-info\*
+    c:\programdata\anaconda3\envs\ai\lib\site-packages\tweepy\*
+Proceed (Y/n)? y
+  Successfully uninstalled tweepy-4.4.0
+
+(ai) C:\kd1\setup>pip install tweepy==3.10.0
+Collecting tweepy==3.10.0
+  Using cached tweepy-3.10.0-py2.py3-none-any.whl (30 kB)
+
+(ai) C:\kd1\setup>pip show tweepy
+Name: tweepy
+Version: 3.10.0
+Summary: Twitter library for Python
+Home-page: https://www.tweepy.org/
+Author: Joshua Roesslein
+Author-email: tweepy@googlegroups.com
+License: MIT
+Location: c:\programdata\anaconda3\envs\ai\lib\site-packages
+Requires: requests, requests-oauthlib, six
+Required-by: konlpy
+
+
+
+[03] KoNLPy 실습
+
+   - 형태소(의미를 갖는 최소 단위) 분석기 
+   
+
+1. Kkma 품사 태그
+   - http://kkma.snu.ac.kr
+   - NNG: 일반 명사
+   - JKS: 주격 조사
+   - JKM: 부사격 조사
+   - VV: 동사
+   - EFN: 평서형 종결 어미
+   - SF: 마치표, 물음표, 느낌표
+
+
+2. Komoran 형태소 분석기 품사 태그표
+   - https://docs.komoran.kr/index.html
+   - NNG: 일반 명사
+   - JKS: 주격 조사
+   - JKB: 부사격 조사
+   - VV: 동사
+   - EF: 종결 어미
+   - SF: 마치표, 물음표, 느낌표
+
+
+3. Okt 형태소 분석기 품사 태그표
+   - Noun: 명사
+   - Verb: 동사
+   - Adjective: 형용사
+   - Josa: 조사
+   - Punctuation: 구두점
+
+
+4. Tokenizing 실습
+▷ /machine/NLP/basic/Tokenizing.ipynb
+첨부 파일 참고
+ 
+
+
+5. 사용자 사전 구축
+   - 형태소 분석기에서 인식하지 못하는 특이한 단어나 고유명사등을 직접 추가하여 인식 시키는 방법
+
+▷ /machine/NLP/basic/Tokenizing.ipynb append
+첨부 파일 참고
+ 
+
+
+
